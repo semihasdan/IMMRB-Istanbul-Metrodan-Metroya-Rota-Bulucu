@@ -12,15 +12,19 @@ connectDB();
 const app = express();
 
 // CORS ayarları
-app.use(cors({
-    origin: [
-        'http://localhost:5173',
-        'http://localhost:5174',
-        'https://istanbul-metro-route-frontend.onrender.com'
-    ],
-    methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type']
-}));
+app.use(cors());  // Tüm originlere izin ver
+
+// Request logging middleware
+app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+    next();
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error('Error:', err);
+    res.status(500).json({ error: err.message });
+});
 
 // Middleware
 app.use(bodyParser.json());

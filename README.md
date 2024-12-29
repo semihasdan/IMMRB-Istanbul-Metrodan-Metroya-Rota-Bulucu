@@ -44,9 +44,21 @@ npm run dev
 
 Bu proje Render.com üzerinde host edilmektedir:
 
-- Frontend: [URL eklenecek]
-- Backend API: [URL eklenecek]
+- Frontend: https://istanbul-metro-route-frontend.onrender.com
+- Backend API: https://istanbul-metro-route-backend.onrender.com
 
-## Lisans
+## Environment Variables
 
-MIT
+### Backend (.env)
+```
+MONGODB_URI=your_mongodb_connection_string
+PORT=3000
+```
+
+### Frontend (.env)
+```
+VITE_API_URL=https://istanbul-metro-route-backend.onrender.com/api/routes
+```
+
+![image](https://github.com/user-attachments/assets/5d6bdf14-9d05-4eb9-b93e-ffda8d260d30)
+
