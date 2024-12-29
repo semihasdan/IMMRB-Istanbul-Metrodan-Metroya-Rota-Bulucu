@@ -13,7 +13,11 @@ const app = express();
 
 // CORS ayarları
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:5174'],
+    origin: [
+        'http://localhost:5173',
+        'http://localhost:5174',
+        'https://istanbul-metro-route-frontend.onrender.com'
+    ],
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type']
 }));
