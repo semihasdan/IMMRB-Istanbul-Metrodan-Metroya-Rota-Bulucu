@@ -9,6 +9,10 @@ const HomePage = () => {
   const [endStation, setEndStation] = useState<MapStation | null>(null);
   const [route, setRoute] = useState<MapRoute | null>(null);
 
+  const handleRouteFound = (newRoute: MapRoute) => {
+    setRoute(newRoute);
+  };
+
   return (
     <Box sx={{ padding: 3 }}>
       <Paper elevation={3} sx={{ padding: 3, marginBottom: 3 }}>
@@ -21,6 +25,7 @@ const HomePage = () => {
         <StationSelector
           onStartStationChange={setStartStation}
           onEndStationChange={setEndStation}
+          onRouteFound={handleRouteFound}
         />
       </Paper>
       <Map startStation={startStation} endStation={endStation} route={route} />

@@ -1,28 +1,14 @@
 import { useState } from 'react';
 import RouteForm from './components/RouteForm';
 import Map from './components/Map';
-
-interface Station {
-  name: string;
-  coordinates: {
-    type: string;
-    coordinates: [number, number];
-  };
-  line: string;
-}
-
-interface Route {
-  path: Station[];
-  distance: number;
-  numberOfStations: number;
-}
+import { MapStation, MapRoute } from './types';
 
 function App() {
-  const [route, setRoute] = useState<Route | null>(null);
-  const [startStation, setStartStation] = useState<Station | null>(null);
-  const [endStation, setEndStation] = useState<Station | null>(null);
+  const [route, setRoute] = useState<MapRoute | null>(null);
+  const [startStation, setStartStation] = useState<MapStation | null>(null);
+  const [endStation, setEndStation] = useState<MapStation | null>(null);
 
-  const handleRouteFound = (newRoute: Route) => {
+  const handleRouteFound = (newRoute: MapRoute) => {
     setRoute(newRoute);
   };
 
