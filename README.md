@@ -47,6 +47,5 @@ Bu proje Render.com üzerinde host edilmektedir:
 - Frontend: [URL eklenecek]
 - Backend API: [URL eklenecek]
 
-## Lisans
+![image](https://github.com/user-attachments/assets/5d6bdf14-9d05-4eb9-b93e-ffda8d260d30)
 
-MIT
