@@ -4,32 +4,15 @@ import Map from '../components/Map';
 import StationSelector from '../components/StationSelector';
 
 interface Station {
-  id: string;
   name: string;
   line: string;
   coordinates: [number, number];
 }
 
-// Örnek istasyon verileri (daha sonra API'den alınacak)
-const sampleStations: Station[] = [
-  {
-    id: '1',
-    name: 'Taksim',
-    line: 'M2',
-    coordinates: [41.0370, 28.9850],
-  },
-  {
-    id: '2',
-    name: 'Yenikapı',
-    line: 'M2',
-    coordinates: [41.0050, 28.9500],
-  },
-  // Daha fazla istasyon eklenecek
-];
-
 const HomePage = () => {
   const [startStation, setStartStation] = useState<Station | null>(null);
   const [endStation, setEndStation] = useState<Station | null>(null);
+  const [route, setRoute] = useState(null);
 
   return (
     <Box sx={{ padding: 3 }}>
@@ -41,12 +24,11 @@ const HomePage = () => {
           Başlangıç ve varış istasyonlarını seçerek en uygun rotayı bulun.
         </Typography>
         <StationSelector
-          stations={sampleStations}
           onStartStationChange={setStartStation}
           onEndStationChange={setEndStation}
         />
       </Paper>
-      <Map startStation={startStation} endStation={endStation} />
+      <Map startStation={startStation} endStation={endStation} route={route} />
     </Box>
   );
 };

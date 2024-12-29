@@ -1,56 +1,90 @@
-import { Autocomplete, TextField, Grid } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { api } from '../services/api';
 
 interface Station {
-  id: string;
   name: string;
   line: string;
   coordinates: [number, number];
 }
 
 interface StationSelectorProps {
-  stations: Station[];
   onStartStationChange: (station: Station | null) => void;
   onEndStationChange: (station: Station | null) => void;
 }
 
-const StationSelector = ({
-  stations,
+const StationSelector: React.FC<StationSelectorProps> = ({
   onStartStationChange,
   onEndStationChange,
-}: StationSelectorProps) => {
+}) => {
+  const [stations, setStations] = useState<Station[]>([]);
+  const [startStation, setStartStation] = useState<string>('');
+  const [endStation, setEndStation] = useState<string>('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchStations = async () => {
+      try {
+        const stationData = await api.getAllStations();
+        setStations(stationData);
+        setLoading(false);
+      } catch (err) {
+        setError('İstasyonlar yüklenirken bir hata oluştu.');
+        setLoading(false);
+      }
+    };
+
+    fetchStations();
+  }, []);
+
+  const handleStartStationChange = (value: string) => {
+    setStartStation(value);
+    const station = stations.find(s => s.name === value) || null;
+    onStartStationChange(station);
+  };
+
+  const handleEndStationChange = (value: string) => {
+    setEndStation(value);
+    const station = stations.find(s => s.name === value) || null;
+    onEndStationChange(station);
+  };
+
+  if (loading) return <div>İstasyonlar yükleniyor...</div>;
+  if (error) return <div>{error}</div>;
+
   return (
-    <Grid container spacing={2} sx={{ marginY: 2 }}>
-      <Grid item xs={12} md={6}>
-        <Autocomplete
-          options={stations}
-          getOptionLabel={(option) => `${option.name} (${option.line})`}
-          onChange={(_, value) => onStartStationChange(value)}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Başlangıç İstasyonu"
-              variant="outlined"
-              fullWidth
-            />
-          )}
-        />
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <Autocomplete
-          options={stations}
-          getOptionLabel={(option) => `${option.name} (${option.line})`}
-          onChange={(_, value) => onEndStationChange(value)}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Varış İstasyonu"
-              variant="outlined"
-              fullWidth
-            />
-          )}
-        />
-      </Grid>
-    </Grid>
+    <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', sm: 'row' } }}>
+      <FormControl fullWidth>
+        <InputLabel>Başlangıç İstasyonu</InputLabel>
+        <Select
+          value={startStation}
+          label="Başlangıç İstasyonu"
+          onChange={(e) => handleStartStationChange(e.target.value)}
+        >
+          {stations.map((station) => (
+            <MenuItem key={station.name} value={station.name}>
+              {station.name} ({station.line})
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
+      <FormControl fullWidth>
+        <InputLabel>Varış İstasyonu</InputLabel>
+        <Select
+          value={endStation}
+          label="Varış İstasyonu"
+          onChange={(e) => handleEndStationChange(e.target.value)}
+        >
+          {stations.map((station) => (
+            <MenuItem key={station.name} value={station.name}>
+              {station.name} ({station.line})
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </Box>
   );
 };
 

@@ -2,15 +2,27 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api/
 
 interface Station {
     name: string;
+    line: string;
+    coordinates: [number, number];
+}
+
+interface APIStation {
+    name: string;
+    line: string;
     coordinates: {
         type: string;
         coordinates: [number, number];
     };
-    line: string;
 }
 
 interface Route {
     path: Station[];
+    distance: number;
+    numberOfStations: number;
+}
+
+interface APIRoute {
+    path: APIStation[];
     distance: number;
     numberOfStations: number;
 }
@@ -29,7 +41,15 @@ export const api = {
             
             const data = await response.json();
             console.log('Alınan istasyonlar:', data);
-            return data.stations;
+            
+            // API'den gelen veriyi dönüştür
+            const stations: Station[] = data.stations.map((station: APIStation) => ({
+                name: station.name,
+                line: station.line,
+                coordinates: station.coordinates.coordinates
+            }));
+            
+            return stations;
         } catch (error) {
             console.error('İstasyon listesi hatası:', error);
             throw error;
@@ -50,7 +70,20 @@ export const api = {
             
             const data = await response.json();
             console.log('Bulunan rota:', data);
-            return data.route;
+            
+            // API'den gelen veriyi dönüştür
+            const apiRoute = data.route as APIRoute;
+            const route: Route = {
+                path: apiRoute.path.map((station) => ({
+                    name: station.name,
+                    line: station.line,
+                    coordinates: station.coordinates.coordinates
+                })),
+                distance: apiRoute.distance,
+                numberOfStations: apiRoute.numberOfStations
+            };
+            
+            return route;
         } catch (error) {
             console.error('Rota bulma hatası:', error);
             throw error;

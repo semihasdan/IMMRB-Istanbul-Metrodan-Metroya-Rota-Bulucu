@@ -4,11 +4,11 @@ import 'leaflet/dist/leaflet.css';
 
 interface Station {
   name: string;
+  line: string;
   coordinates: {
     type: string;
     coordinates: [number, number];
   };
-  line: string;
 }
 
 interface Route {
@@ -19,9 +19,19 @@ interface Route {
 
 interface MapProps {
   route: Route | null;
+  startStation: {
+    name: string;
+    line: string;
+    coordinates: [number, number];
+  } | null;
+  endStation: {
+    name: string;
+    line: string;
+    coordinates: [number, number];
+  } | null;
 }
 
-const Map: React.FC<MapProps> = ({ route }) => {
+const Map: React.FC<MapProps> = ({ route, startStation, endStation }) => {
   const mapRef = useRef<L.Map | null>(null);
   const routeLayerRef = useRef<L.LayerGroup | null>(null);
 
@@ -121,6 +131,68 @@ const Map: React.FC<MapProps> = ({ route }) => {
     mapRef.current.fitBounds(bounds, { padding: [50, 50] });
 
   }, [route]);
+
+  useEffect(() => {
+    if (!mapRef.current || !routeLayerRef.current) return;
+
+    routeLayerRef.current.clearLayers();
+
+    // Başlangıç istasyonunu göster
+    if (startStation) {
+      const startMarker = L.circleMarker(
+        [startStation.coordinates[1], startStation.coordinates[0]],
+        {
+          radius: 10,
+          fillColor: '#dc004e',
+          color: '#fff',
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0.8
+        }
+      );
+
+      startMarker.bindPopup(`
+        <div class="station-popup">
+          <h3 class="font-bold text-lg mb-1">${startStation.name}</h3>
+          <p class="text-sm text-gray-600">${startStation.line}</p>
+          <p class="text-sm font-semibold mt-1">Başlangıç İstasyonu</p>
+        </div>
+      `).addTo(routeLayerRef.current);
+    }
+
+    // Varış istasyonunu göster
+    if (endStation) {
+      const endMarker = L.circleMarker(
+        [endStation.coordinates[1], endStation.coordinates[0]],
+        {
+          radius: 10,
+          fillColor: '#dc004e',
+          color: '#fff',
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0.8
+        }
+      );
+
+      endMarker.bindPopup(`
+        <div class="station-popup">
+          <h3 class="font-bold text-lg mb-1">${endStation.name}</h3>
+          <p class="text-sm text-gray-600">${endStation.line}</p>
+          <p class="text-sm font-semibold mt-1">Varış İstasyonu</p>
+        </div>
+      `).addTo(routeLayerRef.current);
+    }
+
+    // Haritayı istasyonlara göre ortala
+    if (startStation && endStation) {
+      const bounds = L.latLngBounds([
+        [startStation.coordinates[1], startStation.coordinates[0]],
+        [endStation.coordinates[1], endStation.coordinates[0]]
+      ]);
+      mapRef.current.fitBounds(bounds, { padding: [50, 50] });
+    }
+
+  }, [startStation, endStation]);
 
   const renderFooter = () => {
     return (
