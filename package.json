@@ -1,0 +1,13 @@
+{
+  "name": "istanbul-metro-route",
+  "version": "1.0.0",
+  "description": "Istanbul Metro Route Finder",
+  "scripts": {
+    "install-all": "cd front-end && npm install && cd ../back-end && npm install",
+    "start": "cd back-end && npm start",
+    "build": "cd front-end && npm run build"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+} 
