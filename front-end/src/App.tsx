@@ -19,6 +19,8 @@ interface Route {
 
 function App() {
   const [route, setRoute] = useState<Route | null>(null);
+  const [startStation, setStartStation] = useState<Station | null>(null);
+  const [endStation, setEndStation] = useState<Station | null>(null);
 
   const handleRouteFound = (newRoute: Route) => {
     setRoute(newRoute);
@@ -32,7 +34,11 @@ function App() {
         </h1>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-1">
-            <RouteForm onRouteFound={handleRouteFound} />
+            <RouteForm 
+              onRouteFound={handleRouteFound}
+              onStartStationChange={setStartStation}
+              onEndStationChange={setEndStation}
+            />
             {route && (
               <div className="mt-6 bg-white p-6 rounded-lg shadow-lg">
                 <h2 className="text-xl font-semibold text-gray-800 mb-4">Rota Bilgileri</h2>
@@ -69,7 +75,7 @@ function App() {
           </div>
           <div className="lg:col-span-2">
             <div className="bg-white p-2 rounded-lg shadow-lg h-[600px]">
-              <Map route={route} />
+              <Map route={route} startStation={startStation} endStation={endStation} />
             </div>
           </div>
         </div>

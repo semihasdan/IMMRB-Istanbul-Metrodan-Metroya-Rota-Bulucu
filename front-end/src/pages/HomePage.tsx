@@ -2,17 +2,12 @@ import { useState } from 'react';
 import { Box, Typography, Paper } from '@mui/material';
 import Map from '../components/Map';
 import StationSelector from '../components/StationSelector';
-
-interface Station {
-  name: string;
-  line: string;
-  coordinates: [number, number];
-}
+import { MapStation, MapRoute } from '../types';
 
 const HomePage = () => {
-  const [startStation, setStartStation] = useState<Station | null>(null);
-  const [endStation, setEndStation] = useState<Station | null>(null);
-  const [route, setRoute] = useState(null);
+  const [startStation, setStartStation] = useState<MapStation | null>(null);
+  const [endStation, setEndStation] = useState<MapStation | null>(null);
+  const [route, setRoute] = useState<MapRoute | null>(null);
 
   return (
     <Box sx={{ padding: 3 }}>

@@ -1,34 +1,12 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-
-interface Station {
-  name: string;
-  line: string;
-  coordinates: {
-    type: string;
-    coordinates: [number, number];
-  };
-}
-
-interface Route {
-  path: Station[];
-  distance: number;
-  numberOfStations: number;
-}
+import { MapStation, MapRoute } from '../types';
 
 interface MapProps {
-  route: Route | null;
-  startStation: {
-    name: string;
-    line: string;
-    coordinates: [number, number];
-  } | null;
-  endStation: {
-    name: string;
-    line: string;
-    coordinates: [number, number];
-  } | null;
+  route: MapRoute | null;
+  startStation: MapStation | null;
+  endStation: MapStation | null;
 }
 
 const Map: React.FC<MapProps> = ({ route, startStation, endStation }) => {
@@ -60,8 +38,8 @@ const Map: React.FC<MapProps> = ({ route, startStation, endStation }) => {
     routeLayerRef.current.clearLayers();
 
     const coordinates = route.path.map(station => [
-      station.coordinates.coordinates[1],
-      station.coordinates.coordinates[0]
+      station.coordinates[1],
+      station.coordinates[0]
     ] as [number, number]);
 
     L.polyline(coordinates, {
@@ -80,7 +58,7 @@ const Map: React.FC<MapProps> = ({ route, startStation, endStation }) => {
       if (isTransfer) markerColor = '#ff9800';
 
       const marker = L.circleMarker(
-        [station.coordinates.coordinates[1], station.coordinates.coordinates[0]],
+        [station.coordinates[1], station.coordinates[0]],
         {
           radius: isEndpoint ? 10 : isTransfer ? 8 : 6,
           fillColor: markerColor,
